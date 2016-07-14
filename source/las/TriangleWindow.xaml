@@ -1,0 +1,26 @@
+﻿<Window x:Class="Automaton.TriangleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TriangleWindow" Height="{Binding ElementName=Triangle, Path=TriangleP.Height, Mode=TwoWay}" Width="{Binding ElementName=Triangle, Path=TriangleP.Width, Mode=TwoWay}"
+        x:Name="Triangle" WindowStyle="ToolWindow"
+        >
+    <Grid>
+        <!--<Canvas>
+            <Ellipse Canvas.Left="{Binding ElementName=Triangle, Path=X}" Canvas.Bottom="{Binding ElementName=Triangle, Path=Y}"  Width="4" Height="4" Fill="{Binding ElementName=Triangle, Path=CBrush}" Stroke="Black"/>-->
+            
+        <ItemsControl ItemsSource="{Binding ElementName=Triangle, Path=TriangleP.Buffer}" Name="ic1">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas IsItemsHost="True" Name="c1"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+               
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Line X1="{Binding X}" Y1="{Binding Y}" X2="{Binding X2}" Y2="{Binding Y2}" Stroke="{Binding ColorBrush}" Name="e"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        <!--</Canvas>-->
+    </Grid>
+</Window>

@@ -1,0 +1,89 @@
+﻿<Window x:Class="Automaton.MainWindow" x:Name="Me"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Forest" Height="350" Width="525"
+        xmlns:Automaton="clr-namespace:Automaton"
+        Closed="QuitApp"
+        >
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.SaveCommand}" Executed="ExecuteSave" CanExecute="CanExecuteSave"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.OpenCommand}" Executed="ExecuteOpen"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.NewCommand}" Executed="ExecuteNew"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.StartCommand}" Executed="ExecuteStart" CanExecute="CanExecuteStart"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.StopCommand}" Executed="ExecuteStop" CanExecute="CanExecuteStop"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.ShowParamsCommand}" Executed="ShowParams" CanExecute="CanShowParams"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.HideParamsCommand}" Executed="HideParams" CanExecute="CanHideParams"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.ShowStatsCommand}" Executed="ShowStats" CanExecute="CanShowStats"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.HideStatsCommand}" Executed="HideStats" CanExecute="CanHideStats"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.ShowPhaseCommand}" Executed="ShowPhase" CanExecute="CanShowPhase"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.HidePhaseCommand}" Executed="HidePhase" CanExecute="CanHidePhase"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.StartLogCommand}" Executed="StartLog" CanExecute="CanStartLog"/>
+        <CommandBinding Command="{x:Static Automaton:MainWindow.StopLogCommand}" Executed="StopLog" CanExecute="CanStopLog"/>
+    </Window.CommandBindings>
+    <DockPanel Name="dock1">     
+        <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{x:Static Automaton:MainWindow.NewCommand}"/>
+                <MenuItem Header="_Open" Command="{x:Static Automaton:MainWindow.OpenCommand}"/>
+                <MenuItem Header="_Save" Command="{x:Static Automaton:MainWindow.SaveCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Automaton">
+                <MenuItem Header="_Run" Command="{x:Static Automaton:MainWindow.StartCommand}"/>
+                <MenuItem Header="_Stop" Command="{x:Static Automaton:MainWindow.StopCommand}"/>
+                <MenuItem Header="Start _logging" Command="{x:Static Automaton:MainWindow.StartLogCommand}"/>
+                <MenuItem Header="Stop l_ogging" Command="{x:Static Automaton:MainWindow.StopLogCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <!--<MenuItem Header="Pokaż statystyki" Command="{x:Static Automat:MainWindow.ShowStatsCommand}"/>
+                <MenuItem Header="Ukryj statystyki" Command="{x:Static Automat:MainWindow.HideStatsCommand}"/>
+                <MenuItem Header="Pokaż parametry" Command="{x:Static Automat:MainWindow.ShowParamsCommand}"/>
+                <MenuItem Header="Ukryj parametry" Command="{x:Static Automat:MainWindow.HideParamsCommand}"/>
+                <MenuItem Header="Pokaż ?" Command="{x:Static Automat:MainWindow.ShowPhaseCommand}"/>
+                <MenuItem Header="Ukryj ?" Command="{x:Static Automat:MainWindow.HidePhaseCommand}"/>-->
+                <MenuItem Name="StatMenuItem" Header="Statistics" IsCheckable="True" IsEnabled="{Binding ElementName=Me, Path=StatWindowExists}" Checked="ToggleStatWindowOn" Unchecked="ToggleStatWindowOff"/>
+                <MenuItem Name="ParamMenuItem" Header="Parameters" IsCheckable="True" IsEnabled="{Binding ElementName=Me, Path=ParamWindowExists}" Checked="ToggleParamWindowOn" Unchecked="ToggleParamWindowOff"/>
+                <MenuItem Name="PhaseMenuItem" Header="Graph" IsCheckable="True" IsEnabled="{Binding ElementName=Me, Path=PhaseWindowExists}" Checked="TogglePhaseWindowOn" Unchecked="TogglePhaseWindowOff"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="ShowAbout"/>
+            </MenuItem>
+        </Menu>
+         <StackPanel Name="stackPanel1" Orientation="Horizontal" Height="30" DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <!--<Button Content="Krok" Height="23" Name="button1" Width="75" Click="EvolutionOneStep" />-->
+            <Button Content="..." Height="23" Name="button2" Width="75" Click="StartStop" />
+            <Label Content="Steps" Height="28" Name="label2" />
+            <TextBox Name="textboxKroki" Text="{Binding ElementName=Me, Path=AutomatPresenterOb.StepCount, Mode=OneWay}" Focusable="False" />
+            <Label Content="Scale" Height="28" Name="label1" />
+            <TextBox Name="textboxSkala" Text="{Binding ElementName=Me, Path=AutomatPresenterOb.Scale, Mode=OneWay}" />
+            <Slider Height="23" Name="sliderSkala" Width="100" Minimum="1" Value="{Binding ElementName=Me, Path=AutomatPresenterOb.Scale, Mode=TwoWay}" SmallChange="1" IsSnapToTickEnabled="True" />
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl Name="itemsPola" ItemsSource="{Binding ElementName=Me, Path=AutomatPresenterOb.Cells}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                        <Canvas Name="canvasPola" IsItemsHost="true" VerticalAlignment="Top" HorizontalAlignment="Left" Width="{Binding ElementName=Me, Path=AutomatPresenterOb.SizeXScaled}" Height="{Binding ElementName=Me, Path=AutomatPresenterOb.SizeYScaled}" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                    <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                        <Rectangle Width="{Binding ElementName=Me, Path=AutomatPresenterOb.Scale}" Height="{Binding ElementName=Me, Path=AutomatPresenterOb.Scale}" Tag="{Binding}" MouseDown="Mouse">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{Binding Color}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+</ScrollViewer>
+
+
+
+    </DockPanel>
+</Window>

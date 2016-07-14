@@ -1,0 +1,45 @@
+﻿<Window x:Class="Automaton.StatWindow" x:Name="Stats"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Statistics"
+        xmlns:Automaton="clr-namespace:Automaton"
+         Width="{Binding ElementName=Stats, Path=RealWidth, Mode=TwoWay}"  WindowStyle="ToolWindow">
+    <DockPanel Name="S_dock1" >
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl Name="S_itemsStatystyki" ItemsSource="{Binding ElementName=Stats, Path=Stat.Stats}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" IsItemsHost="true"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                 
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="0">
+                            <ItemsControl ItemsSource="{Binding Path=GraphBuffer}" Name="Graph">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" IsItemsHost="true" Height="100"/>
+                                 </ItemsPanelTemplate>
+                             </ItemsControl.ItemsPanel>
+                            
+                                    <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                        <Canvas Width="1">
+                                            <Rectangle Width="1" Height="{Binding Height}" Fill="{Binding ColorBrush}" Canvas.Bottom="{Binding Bottom}"/>
+                                        </Canvas>
+                                            
+                                        
+                                    </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                         </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+
+
+    </DockPanel>
+</Window>
